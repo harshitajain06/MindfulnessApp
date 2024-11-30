@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // For icons
 import { db } from '../../config/firebase'; // Import Firestore database from your firebase.js
+import { useNavigation } from '@react-navigation/native';
 import { collection, addDoc, getDocs, serverTimestamp } from 'firebase/firestore'; // Import Firestore methods
 
 const Journal = () => {
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [journalEntry, setJournalEntry] = useState('');
   const [journals, setJournals] = useState([]); // State to hold previous journals
@@ -67,7 +69,12 @@ const Journal = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Journal</Text>
+      <View style={styles.header}>
+    <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={28} color="#29A090" />
+    </TouchableOpacity>
+    <Text style={styles.title}>My Journal</Text>
+  </View>
       <Text style={styles.subtitle}>Write down your thoughts and feelings here.</Text>
 
       {/* Scrollable view for displaying previous journals */}
@@ -152,11 +159,17 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: '#f5f5f5',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    marginBottom: 40,
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#29A090',
-    marginBottom: 10,
+    marginLeft: 50, // Space between back icon and title
     marginTop: 50,
   },
   subtitle: {
