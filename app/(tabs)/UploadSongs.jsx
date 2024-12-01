@@ -5,48 +5,40 @@ import { storage, db } from '../../config/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker'; // Import Picker from @react-native-picker/picker
 
 const UploadSongs = () => {
   const [uploadMessage, setUploadMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [songType, setSongType] = useState('calming'); // Default type
   const navigation = useNavigation();
 
   const handleUpload = async () => {
     try {
-      // Show modal and start loading
       setModalVisible(true);
       setIsLoading(true);
 
-      // Open document picker to select an audio file
       const result = await DocumentPicker.getDocumentAsync({ type: 'audio/mpeg' });
-      console.log("Document Picker Result:", result);
+      console.log('Document Picker Result:', result);
 
-      // Check if a file was selected
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const { uri, name } = result.assets[0];
-
-        // Convert the file to a blob for Firebase upload
         const response = await fetch(uri);
         const blob = await response.blob();
 
-        // Define Firebase Storage reference
-        const fileRef = ref(storage, `calming-audio/${name}`);
-
-        // Upload file to Firebase Storage
+        const fileRef = ref(storage, `${songType}/${name}`);
         await uploadBytes(fileRef, blob);
         const downloadURL = await getDownloadURL(fileRef);
 
-        // Save metadata to Firestore
         const songData = {
           name: name,
-          type: 'calming',
+          type: songType,
           url: downloadURL,
           uploadedAt: new Date(),
         };
         await addDoc(collection(db, 'songs'), songData);
 
-        // Update message for success
         setUploadMessage(`Uploaded: ${name}`);
       } else {
         setUploadMessage('Upload canceled or no file selected');
@@ -54,26 +46,36 @@ const UploadSongs = () => {
     } catch (error) {
       setUploadMessage(`Error uploading file: ${error.message}`);
     } finally {
-      // Stop loading after upload completes
       setIsLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Upload Calming Songs</Text>
-      
-      {/* Button to select and upload an MP3 file */}
+      <Text style={styles.title}>Upload Songs</Text>
+
+      <Text style={styles.label}>Select Song Type:</Text>
+      <Picker
+        selectedValue={songType}
+        style={styles.picker}
+        onValueChange={(itemValue) => setSongType(itemValue)}
+      >
+        <Picker.Item label="Calming" value="calming" />
+        <Picker.Item label="Joyful" value="joyful" />
+        <Picker.Item label="Relief" value="relief" />
+        <Picker.Item label="Guided" value="guided" />
+        <Picker.Item label="Violin" value="violin" />
+        <Picker.Item label="Vibrations" value="vibrations" />
+      </Picker>
+
       <TouchableOpacity style={styles.button} onPress={handleUpload}>
         <Text style={styles.buttonText}>Select and Upload MP3</Text>
       </TouchableOpacity>
-      
-      {/* Button to navigate to Calming page */}
-      <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('Calming')}>
-        <Text style={styles.navigateButtonText}>Go to Calming Page</Text>
+
+      <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('Meditate')}>
+        <Text style={styles.navigateButtonText}>Go to Meditate Page</Text>
       </TouchableOpacity>
 
-      {/* Modal for showing upload message or loading indicator */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -87,10 +89,7 @@ const UploadSongs = () => {
             ) : (
               <>
                 <Text style={styles.modalMessage}>{uploadMessage}</Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setModalVisible(false)}
-                >
+                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                   <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
               </>
@@ -113,6 +112,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#29A090',
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  picker: {
+    height: 50,
+    width: '80%',
     marginBottom: 20,
   },
   button: {

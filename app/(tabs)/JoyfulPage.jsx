@@ -2,9 +2,10 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AudioPage from './AudioPage'; // Adjust the import path as necessary
 
-const Calming = () => {
+const Joyful = () => {
   const navigation = useNavigation();
-  return <AudioPage type="calming" />;
+
+  return <AudioPage type="joyful" />;
 };
 
-export default Calming;
+export default Joyful;

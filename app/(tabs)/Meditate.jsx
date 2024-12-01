@@ -8,11 +8,11 @@ const Mediate = () => {
 
   const buttons = [
     { title: 'Calming', icon: 'leaf-outline', screen: 'Calming' },     // Icon for "Calming"
-    { title: 'Joyful', icon: 'happy-outline', screen: 'Joyful' },      // Icon for "Joyful"
-    { title: 'Relief', icon: 'heart-outline', screen: 'Relief' },      // Icon for "Relief"
-    { title: 'Guided', icon: 'compass-outline', screen: 'Guided' },    // Icon for "Guided"
-    { title: 'Violin', icon: 'musical-notes-outline', screen: 'Violin' },  // Icon for "Violin"
-    { title: 'Vibrations', icon: 'volume-high-outline', screen: 'Vibrations' }, // Icon for "Vibrations"
+    { title: 'Joyful', icon: 'happy-outline', screen: 'JoyfulPage' },      // Icon for "Joyful"
+    { title: 'Relief', icon: 'heart-outline', screen: 'ReliefPage' },      // Icon for "Relief"
+    { title: 'Guided', icon: 'compass-outline', screen: 'GuidedPage' },    // Icon for "Guided"
+    { title: 'Violin', icon: 'musical-notes-outline', screen: 'ViolinPage' },  // Icon for "Violin"
+    { title: 'Vibrations', icon: 'volume-high-outline', screen: 'VibrationsPage' }, // Icon for "Vibrations"
   ];
 
   return (
