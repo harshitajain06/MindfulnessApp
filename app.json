@@ -11,7 +11,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSDocumentsUsageDescription": "This app needs access to files to upload songs."
+        "NSMicrophoneUsageDescription": "This app needs access to your microphone to upload songs",
+        "NSDocumentsFolderUsageDescription": "This app needs access to your files to upload songs"
       }
     },
     "android": {

@@ -1,49 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { storage, db } from '../../config/firebase';
+import { storage, db } from '../../config/firebase'; // Adjust the path as necessary
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker'; // Import Picker from @react-native-picker/picker
 
 const UploadSongs = () => {
   const [uploadMessage, setUploadMessage] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [songType, setSongType] = useState('calming'); // Default type
+  const [songType, setSongType] = useState('calming'); // Default song type
   const navigation = useNavigation();
 
   const handleUpload = async () => {
     try {
-      setModalVisible(true);
       setIsLoading(true);
+      setUploadMessage('');
 
       const result = await DocumentPicker.getDocumentAsync({ type: 'audio/mpeg' });
-      console.log('Document Picker Result:', result);
+
+      console.log('Picker Result:', result); // Log for debugging
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        const { uri, name } = result.assets[0];
+        const { uri, name } = result.assets[0]; // Access correct file data
+        console.log(`Uploading file: ${name}`);
+
+        // Fetch the file and convert to Blob
         const response = await fetch(uri);
         const blob = await response.blob();
 
-        const fileRef = ref(storage, `${songType}/${name}`);
+        // Firebase Storage reference
+        const fileRef = ref(storage, `uploads/${songType}/${Date.now()}_${name}`);
         await uploadBytes(fileRef, blob);
+        console.log('File uploaded to Firebase Storage');
+
+        // Get download URL
         const downloadURL = await getDownloadURL(fileRef);
 
-        const songData = {
-          name: name,
+        // Save metadata in Firestore
+        const docRef = await addDoc(collection(db, 'songs'), {
+          name,
           type: songType,
           url: downloadURL,
           uploadedAt: new Date(),
-        };
-        await addDoc(collection(db, 'songs'), songData);
+        });
 
+        console.log(`Document added with ID: ${docRef.id}`);
         setUploadMessage(`Uploaded: ${name}`);
       } else {
         setUploadMessage('Upload canceled or no file selected');
       }
     } catch (error) {
+      console.error('Error uploading file:', error);
       setUploadMessage(`Error uploading file: ${error.message}`);
     } finally {
       setIsLoading(false);
@@ -55,48 +69,43 @@ const UploadSongs = () => {
       <Text style={styles.title}>Upload Songs</Text>
 
       <Text style={styles.label}>Select Song Type:</Text>
-      <Picker
-        selectedValue={songType}
-        style={styles.picker}
-        onValueChange={(itemValue) => setSongType(itemValue)}
-      >
-        <Picker.Item label="Calming" value="calming" />
-        <Picker.Item label="Joyful" value="joyful" />
-        <Picker.Item label="Relief" value="relief" />
-        <Picker.Item label="Guided" value="guided" />
-        <Picker.Item label="Violin" value="violin" />
-        <Picker.Item label="Vibrations" value="vibrations" />
-      </Picker>
+      <View style={styles.optionsContainer}>
+        {['calming', 'joyful', 'relief', 'guided', 'violin', 'vibrations'].map(
+          (type) => (
+            <TouchableOpacity
+              key={type}
+              style={[
+                styles.optionButton,
+                songType === type && styles.selectedButton,
+              ]}
+              onPress={() => setSongType(type)}
+            >
+              <Text
+                style={[
+                  styles.optionText,
+                  songType === type && styles.selectedText,
+                ]}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          )
+        )}
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleUpload}>
         <Text style={styles.buttonText}>Select and Upload MP3</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('Meditate')}>
+      <TouchableOpacity
+        style={styles.navigateButton}
+        onPress={() => navigation.navigate('Meditate')}
+      >
         <Text style={styles.navigateButtonText}>Go to Meditate Page</Text>
       </TouchableOpacity>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color="#29A090" />
-            ) : (
-              <>
-                <Text style={styles.modalMessage}>{uploadMessage}</Text>
-                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
+      {isLoading && <ActivityIndicator size="large" color="#29A090" />}
+      <Text style={styles.uploadMessage}>{uploadMessage}</Text>
     </View>
   );
 };
@@ -118,10 +127,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
   },
-  picker: {
-    height: 50,
-    width: '80%',
+  optionsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     marginBottom: 20,
+  },
+  optionButton: {
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+  },
+  selectedButton: {
+    backgroundColor: '#29A090',
+  },
+  optionText: {
+    color: '#000',
+    fontSize: 16,
+  },
+  selectedText: {
+    color: '#fff',
   },
   button: {
     padding: 15,
@@ -145,34 +171,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalMessage: {
-    fontSize: 18,
+  uploadMessage: {
+    marginTop: 20,
     color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  closeButton: {
-    padding: 10,
-    backgroundColor: '#29A090',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
