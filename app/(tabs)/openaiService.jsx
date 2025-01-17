@@ -1,7 +1,8 @@
 // openaiService.js
 import axios from 'axios';
 
-const apiKey = '';
+// const apiKey = 'sk-proj-f1hYEZTeVvrC5M09l7NGT3BlbkFJ2LYFAdJsYyGH4mrN95bv';
+const apiKey = ''
 
 export const createCompletion = async (messages) => {
   try {
