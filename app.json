@@ -13,7 +13,8 @@
       "infoPlist": {
         "NSMicrophoneUsageDescription": "This app needs access to your microphone to upload songs",
         "NSDocumentsFolderUsageDescription": "This app needs access to your files to upload songs"
-      }
+      },
+      "bundleIdentifier": "com.harshitaforever.Mindfulness"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,10 +37,26 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "99fca6b6-e6a1-4889-a48c-30a146f5a7bb"
+      }
     }
   }
 }

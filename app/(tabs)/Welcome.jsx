@@ -75,13 +75,13 @@ const Welcome = () => {
         </LinearGradient>
       </View>
 
-      <View style={styles.buttonWrapper}>
+      {/* <View style={styles.buttonWrapper}>
         <LinearGradient colors={['#6DD5FA', '#2980B9']} style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('BrowseSongs')}>
             <Text style={styles.buttonText}>Browse Songs</Text>
           </TouchableOpacity>
         </LinearGradient>
-      </View>
+      </View> */}
 
       {/* New Chat Assistant Button */}
       <View style={styles.buttonWrapper}>

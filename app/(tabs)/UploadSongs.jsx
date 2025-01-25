@@ -11,6 +11,7 @@ import { storage, db } from '../../config/firebase'; // Adjust the path as neces
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const UploadSongs = () => {
   const [uploadMessage, setUploadMessage] = useState('');
@@ -66,6 +67,10 @@ const UploadSongs = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <Text style={styles.title}>Upload Songs</Text>
 
       <Text style={styles.label}>Select Song Type:</Text>
@@ -116,6 +121,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    backgroundColor: '#29A090',
+    padding: 10,
+    borderRadius: 5,
   },
   title: {
     fontSize: 24,

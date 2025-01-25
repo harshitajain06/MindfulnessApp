@@ -7,16 +7,21 @@ const Mediate = () => {
   const navigation = useNavigation(); // Hook for navigation
 
   const buttons = [
-    { title: 'Calming', icon: 'leaf-outline', screen: 'Calming' },     // Icon for "Calming"
-    { title: 'Joyful', icon: 'happy-outline', screen: 'JoyfulPage' },      // Icon for "Joyful"
-    { title: 'Relief', icon: 'heart-outline', screen: 'ReliefPage' },      // Icon for "Relief"
-    { title: 'Guided', icon: 'compass-outline', screen: 'GuidedPage' },    // Icon for "Guided"
-    { title: 'Violin', icon: 'musical-notes-outline', screen: 'ViolinPage' },  // Icon for "Violin"
-    { title: 'Vibrations', icon: 'volume-high-outline', screen: 'VibrationsPage' }, // Icon for "Vibrations"
+    { title: 'Calming', icon: 'leaf-outline', screen: 'Calming' },
+    { title: 'Joyful', icon: 'happy-outline', screen: 'JoyfulPage' },
+    { title: 'Relief', icon: 'heart-outline', screen: 'ReliefPage' },
+    { title: 'Guided', icon: 'compass-outline', screen: 'GuidedPage' },
+    { title: 'Violin', icon: 'musical-notes-outline', screen: 'ViolinPage' },
+    { title: 'Vibrations', icon: 'volume-high-outline', screen: 'VibrationsPage' },
   ];
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={30} color="#29A090" />
+      </TouchableOpacity>
+      
       <Text style={styles.title}>Mediate</Text>
 
       <View style={styles.grid}>
@@ -24,7 +29,7 @@ const Mediate = () => {
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => navigation.navigate(button.screen)} // Navigate to the corresponding screen
+            onPress={() => navigation.navigate(button.screen)}
           >
             <Ionicons name={button.icon} size={50} color="#fff" />
             <Text style={styles.buttonText}>{button.title}</Text>
@@ -40,14 +45,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // Similar to Welcome page
+    backgroundColor: '#f5f5f5',
     paddingTop: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 10,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#29A090', // Color theme similar to Welcome page
+    color: '#29A090',
     marginBottom: 20,
+    marginTop: 20, // Adjusted for back button space
   },
   grid: {
     flexDirection: 'row',
@@ -57,7 +69,7 @@ const styles = StyleSheet.create({
   button: {
     width: 120,
     height: 120,
-    backgroundColor: '#29A090', // Color theme for buttons
+    backgroundColor: '#29A090',
     borderRadius: 20,
     margin: 10,
     justifyContent: 'center',
@@ -66,7 +78,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
-    elevation: 10, // 3D shadow effect for buttons
+    elevation: 10,
   },
   buttonText: {
     color: '#fff',
