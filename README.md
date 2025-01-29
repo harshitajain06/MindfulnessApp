@@ -4,15 +4,6 @@ Mindfulness: Your All-in-One Emotional Wellness Companion
 
 Mindfulness is more than just an app—it's your personal space to reflect, recharge, and grow. Whether you’re seeking clarity, calm, or creativity, this app offers the tools to support your mental and emotional well-being.
 
-Key Features:
-
-Thought Journal: Record and organize your thoughts effortlessly. Writing down your feelings can help you process emotions and gain new insights.
-AI Chatbot: Consult our intuitive AI for guidance on emotions, stress, and self-reflection. Get personalized suggestions and support in real time.
-Personalized Music Integration: Upload your favorite tracks to create a soundtrack that enhances your meditation, relaxation, or focus sessions.
-With its clean, user-friendly interface, Mindfulness makes emotional self-care simple and accessible. Whether you're journaling about your day, meditating to custom playlists, or seeking guidance from our AI, everything is designed to help you feel empowered and centered.
-
-Join thousands already on their journey to mental clarity. Download Mindfulness today and make peace of mind a part of your daily routine.
-
 ## Get started
 
 1. Install dependencies:
